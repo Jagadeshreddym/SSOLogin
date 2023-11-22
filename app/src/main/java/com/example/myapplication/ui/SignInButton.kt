@@ -22,7 +22,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.myapplication.R
-import com.hadiyarajesh.composegoogle.ui.theme.Shapes
+import com.example.myapplication.ui.theme.Shapes
 
 
 @Composable

@@ -8,9 +8,10 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.ui.platform.LocalContext
 import com.example.myapplication.ui.AuthScreen
 import com.example.myapplication.viewmodel.AuthViewModel
-import com.hadiyarajesh.composegoogle.ui.theme.ComposeGoogleSignInTheme
+import com.example.myapplication.ui.theme.ComposeGoogleSignInTheme
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
@@ -25,7 +26,7 @@ class MainActivity : ComponentActivity() {
             ComposeGoogleSignInTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colorScheme.background) {
-                    AuthScreen(authViewModel)
+                    AuthScreen(authViewModel, LocalContext.current)
                 }
             }
         }

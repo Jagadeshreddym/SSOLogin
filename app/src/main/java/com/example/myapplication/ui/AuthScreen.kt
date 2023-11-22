@@ -1,6 +1,7 @@
 package com.example.myapplication.ui
 
 import android.annotation.SuppressLint
+import android.content.Context
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -11,21 +12,25 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.myapplication.R
-import com.google.android.gms.common.api.ApiException
-import com.example.myapplication.viewmodel.AuthViewModel
 import com.example.myapplication.utils.AuthResultContract
+import com.example.myapplication.viewmodel.AuthViewModel
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.common.api.ApiException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
+
 
 @ExperimentalAnimationApi
 @ExperimentalFoundationApi
 @ExperimentalCoroutinesApi
 @Composable
 fun AuthScreen(
-    authViewModel: AuthViewModel
+    authViewModel: AuthViewModel,
+    context:Context
 ) {
     val coroutineScope = rememberCoroutineScope()
     var text by remember { mutableStateOf<String?>(null) }
@@ -36,6 +41,11 @@ fun AuthScreen(
         rememberLauncherForActivityResult(contract = AuthResultContract()) { task ->
             try {
                 val account = task?.getResult(ApiException::class.java)
+                val acct = GoogleSignIn.getLastSignedInAccount(context)
+                if(acct == null)
+                {
+                    text = "Google sign in failed"
+                }
                 if (account == null) {
                     text = "Google sign in failed"
                 } else {
