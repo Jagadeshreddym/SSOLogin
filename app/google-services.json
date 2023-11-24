@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "7533410825",
+    "project_id": "glowing-service-405914",
+    "storage_bucket": "glowing-service-405914.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:7533410825:android:686d8d26da5bd14ef0d6d8",
+        "android_client_info": {
+          "package_name": "com.example.myapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "7533410825-nuqatct34979t3i17n757tm0qsrcsgmt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.myapplication",
+            "certificate_hash": "630c2912057091aebff4cddeb61656b8044d7954"
+          }
+        },
+        {
+          "client_id": "7533410825-b130tnvbiqiibll8r5hnccsrilhiolfk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBxGAj8Aea9EAj2pscus4yF-xQ78ANfJ10"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "7533410825-b130tnvbiqiibll8r5hnccsrilhiolfk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

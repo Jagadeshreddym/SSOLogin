@@ -1,4 +1,4 @@
-package com.hadiyarajesh.composegoogle.model
+package com.example.myapplication.model
 
 data class User(
     val email: String,

@@ -2,4 +2,11 @@
     <string name="app_name">My Application</string>
     <string name="gcp_id">342079923038-lb9k0h1vi10uaqv35avo3t296bmrl0gd.apps.googleusercontent.com</string>
     <string name="backend_client_id">7533410825-b130tnvbiqiibll8r5hnccsrilhiolfk.apps.googleusercontent.com</string>
+    <string name="facebook_app_id">1634225837109637</string>
+    <string name="secret_key">79507dc00354d0da79802b7d0a494dc7</string>
+
+    <!-- The client token is available in Settings > Advanced > Security section of the app dashboard. -->
+    <string name="facebook_client_token">79507dc00354d0da79802b7d0a494dc7</string>
+    <string name="fb_login_protocol_scheme">fb1634225837109637</string> <!-- keep the fb prefix and remove braces-->
+    <string name="no_email_perm">Email permission not granted</string>
 </resources>

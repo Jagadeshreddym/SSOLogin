@@ -1,7 +1,7 @@
 package com.example.myapplication.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.hadiyarajesh.composegoogle.model.User
+import com.example.myapplication.model.User
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
