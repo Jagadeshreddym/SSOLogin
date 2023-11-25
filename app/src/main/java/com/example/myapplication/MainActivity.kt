@@ -37,7 +37,6 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.parse
 import org.json.JSONObject
 import org.json.JSONTokener
 import java.io.OutputStreamWriter
@@ -224,7 +223,7 @@ class MainActivity : ComponentActivity() {
             val response = httpsURLConnection.inputStream.bufferedReader()
                 .use { it.readText() }  // defaults to UTF-8
             val linkedInProfileModel =
-                Json.nonstrict.parse(LinkedInProfileModel::class.java, response)
+                Json.parse(LinkedInProfileModel.serializer(), response)
             withContext(Dispatchers.Main) {
                 Log.d("LinkedIn Access Token: ", token)
                 accessToken = token
@@ -278,7 +277,7 @@ class MainActivity : ComponentActivity() {
             val response = httpsURLConnection.inputStream.bufferedReader()
                 .use { it.readText() }  // defaults to UTF-8
             val linkedInProfileModel =
-                Json.nonstrict.parse(LinkedInEmailModel.serializer(), response)
+                Json.parse(LinkedInEmailModel.serializer(), response)
             withContext(Dispatchers.Main) {
                 // LinkedIn Email
                 val linkedinEmail = linkedInProfileModel.elements.get(0).elementHandle.emailAddress
