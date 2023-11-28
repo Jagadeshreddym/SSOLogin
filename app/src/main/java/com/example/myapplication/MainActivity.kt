@@ -31,6 +31,8 @@ import com.example.myapplication.viewmodel.AuthViewModel
 import com.example.myapplication.ui.theme.ComposeGoogleSignInTheme
 import com.facebook.AccessToken
 import com.facebook.FacebookSdk
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonParser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -40,7 +42,9 @@ import kotlinx.serialization.json.Json
 import org.json.JSONObject
 import org.json.JSONTokener
 import java.io.OutputStreamWriter
+import java.net.HttpURLConnection
 import java.net.URL
+import java.util.concurrent.TimeUnit
 import javax.net.ssl.HttpsURLConnection
 
 @ExperimentalCoroutinesApi
@@ -70,6 +74,12 @@ class MainActivity : ComponentActivity() {
                 Surface(color = MaterialTheme.colorScheme.background) {
                    // AuthScreen(authViewModel, LocalContext.current)
 
+                    val state = "linkedin" + TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis())
+
+                    linkedinAuthURLFull =
+                        LinkedInConstants.AUTHURL + "?response_type=code&client_id=" + LinkedInConstants.CLIENT_ID + "&scope=" + LinkedInConstants.SCOPE + "&state=" + state + "&redirect_uri=" + LinkedInConstants.REDIRECT_URI
+                    Log.i("Test","url ----->"+linkedinAuthURLFull)
+
 
                     Button(onClick = {
 
@@ -86,6 +96,8 @@ class MainActivity : ComponentActivity() {
                     }
 
                     Button(onClick = {
+
+
                         setupLinkedinWebviewDialog(linkedinAuthURLFull)
 
                     }) {
@@ -134,6 +146,7 @@ class MainActivity : ComponentActivity() {
             request: WebResourceRequest?
         ): Boolean {
             if (request?.url.toString().startsWith(LinkedInConstants.REDIRECT_URI)) {
+                Log.i("Test","Code -->"+request?.url.toString())
                 handleUrl(request?.url.toString())
 
                 // Close the dialog after getting the authorization code
@@ -148,6 +161,7 @@ class MainActivity : ComponentActivity() {
         // For API 19 and below
         override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
             if (url.startsWith(LinkedInConstants.REDIRECT_URI)) {
+                Log.i("Test","Code url -->"+url)
                 handleUrl(url)
 
                 // Close the dialog after getting the authorization code
@@ -193,20 +207,34 @@ class MainActivity : ComponentActivity() {
                 outputStreamWriter.write(postParams)
                 outputStreamWriter.flush()
             }
-            val response = httpsURLConnection.inputStream.bufferedReader()
-                .use { it.readText() }  // defaults to UTF-8
-            val jsonObject = JSONTokener(response).nextValue() as JSONObject
 
-            val accessToken = jsonObject.getString("access_token") //The access token
-            Log.d("accessToken is: ", accessToken)
+            val responseCode = httpsURLConnection.responseCode
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                val response = httpsURLConnection.inputStream.bufferedReader()
+                    .use { it.readText() }  // defaults to UTF-8
+                withContext(Dispatchers.Main) {
 
-            val expiresIn = jsonObject.getInt("expires_in") //When the access token expires
-            Log.d("expires in: ", expiresIn.toString())
+                    // Convert raw JSON to pretty JSON using GSON library
+                    val gson = GsonBuilder().setPrettyPrinting().create()
+                    val prettyJson = gson.toJson(JsonParser.parseString(response))
+                    Log.i("Pretty Printed JSON :", prettyJson)
+                    val jsonObject = JSONTokener(response).nextValue() as JSONObject
+
+                    val accessToken = jsonObject.getString("access_token") //The access token
+                    Log.d("accessToken is: ", accessToken)
+
+                    val expiresIn = jsonObject.getInt("expires_in") //When the access token expires
+                    Log.d("expires in: ", expiresIn.toString())
 
 
-            withContext(Dispatchers.Main) {
-                // Get user's id, first name, last name, profile pic url
-                fetchlinkedInUserProfile(accessToken)
+                    withContext(Dispatchers.Main) {
+                        // Get user's id, first name, last name, profile pic url
+                        fetchlinkedInUserProfile(accessToken)
+                    }
+
+                }
+            } else {
+                Log.e("HTTPURLCONNECTION_ERROR", responseCode.toString())
             }
         }
     }
@@ -223,7 +251,7 @@ class MainActivity : ComponentActivity() {
             val response = httpsURLConnection.inputStream.bufferedReader()
                 .use { it.readText() }  // defaults to UTF-8
             val linkedInProfileModel =
-                Json.parse(LinkedInProfileModel.serializer(), response)
+                Json.decodeFromString(LinkedInProfileModel.serializer(), response)
             withContext(Dispatchers.Main) {
                 Log.d("LinkedIn Access Token: ", token)
                 accessToken = token
@@ -277,7 +305,7 @@ class MainActivity : ComponentActivity() {
             val response = httpsURLConnection.inputStream.bufferedReader()
                 .use { it.readText() }  // defaults to UTF-8
             val linkedInProfileModel =
-                Json.parse(LinkedInEmailModel.serializer(), response)
+                Json.decodeFromString(LinkedInEmailModel.serializer(), response)
             withContext(Dispatchers.Main) {
                 // LinkedIn Email
                 val linkedinEmail = linkedInProfileModel.elements.get(0).elementHandle.emailAddress
